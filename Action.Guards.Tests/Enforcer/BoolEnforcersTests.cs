@@ -3,7 +3,7 @@ using System;
 using Action.Guards;
 using Action.Guards.Exceptions;
 
-namespace Action.Guards.Tests
+namespace Action.Guards.Enforcers.Tests
 {
     [TestClass]
     public class BoolEnforcersTests

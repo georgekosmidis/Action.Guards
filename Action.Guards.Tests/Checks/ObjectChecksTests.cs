@@ -1,9 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using Action.Guards;
-using Action.Guards.BaseChecks;
 
-namespace Action.Guards.BaseChecks.Tests
+namespace Action.Guards.Checks.Tests
 {
     [TestClass]
     public class ObjectChecksTests

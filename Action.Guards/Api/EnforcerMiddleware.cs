@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Action.Guards.Exceptions;
+using Microsoft.Extensions.Options;
 
 namespace Action.Guards.Api
 {
@@ -17,16 +18,29 @@ namespace Action.Guards.Api
         /// <summary>
         /// The next RequestDelegate.
         /// </summary>
-        private readonly RequestDelegate next;
+        private readonly RequestDelegate _next;
 
         /// <summary>
-        /// Constructor.
+        /// The Action Guard Settings
         /// </summary>
-        ///
-        /// <param name="next"> The next RequestDelegate. </param>
+        private readonly ActionGuardSettings _settings;
+
+
         public EnforcerMiddleware(RequestDelegate next)
         {
-            this.next = next;
+            _next = next;
+            _settings = new ActionGuardSettings();//default values
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EnforcerMiddleware"/> class.
+        /// </summary>
+        /// <param name="next">The next.</param>
+        /// <param name="options">The options.</param>
+        public EnforcerMiddleware(RequestDelegate next, IOptions<ActionGuardSettings> options)
+        {
+            _next = next;
+            _settings = options.Value;
         }
 
         /// <summary>
@@ -42,7 +56,7 @@ namespace Action.Guards.Api
         {
             try
             {
-                await next(context);
+                await _next(context);
             }
             catch (Exception ex) when (ex is IEnforcerException)
             {
@@ -94,10 +108,10 @@ namespace Action.Guards.Api
         {
             return new EnforcerExceptionModel()
             {
-                ClassName = ex.GetType().Name.Split('.').Reverse().First(),
-                InnerException = ex.InnerException != null ? GetExceptionViewModel(ex.InnerException) : null,
-                Message = ex.Message,
-                StackTrace = ex.StackTrace.Split(new[] { Environment.NewLine }, StringSplitOptions.None).ToList()
+                ClassName = !_settings.ExceptionModel_ShowClassName ? "" : ex.GetType().Name.Split('.').Reverse().First(),
+                InnerException = _settings.ExceptionModel_ShowInnerExceptions && ex.InnerException != null ? GetExceptionViewModel(ex.InnerException) : null,
+                Message = !_settings.ExceptionModel_ShowClassName ? "" : ex.Message,
+                StackTrace = !_settings.ExceptionModel_ShowClassName ? new List<string>() : ex.StackTrace.Split(new[] { Environment.NewLine }, StringSplitOptions.None).ToList()
             };
         }
     }

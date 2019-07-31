@@ -12,6 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Api\WebHostBuilderExtension.cs" />
     <Compile Remove="Checks.cs" />
     <Compile Remove="Enforcers\NumericGuards.cs" />
   </ItemGroup>

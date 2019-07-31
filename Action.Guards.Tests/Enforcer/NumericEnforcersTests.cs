@@ -2,7 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using Action.Guards.Exceptions;
 
-namespace Action.Guards.Tests
+namespace Action.Guards.Enforcers.Tests
 {
     [TestClass]
     public class NumericEnforcersTests
